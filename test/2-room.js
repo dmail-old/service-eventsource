@@ -1,27 +1,30 @@
-import SourceEvent from '../lib/source-event.js';
+import Room from '../lib/room.js';
+import http from '../node_modules/http/index.js';
+
+//var body = http.createBody();
 
 export function suite(add){
-	add('add() create valid response properties', function(){
+	add('add(stream)', function(){
 
 	});
 
-	add('add() when user limit is reached', function(){
+	add('add(stream) when user limit is reached', function(){
 
 	});
 
-	add('add() produce a body stream that is auto removed when body is closed', function(){
+	add('add(stream) when isDisabled', function(){
 
 	});
 
-	// first add will open anyway so closed state is not right
-	// maybe a disabled stats with disable()
-	/*
-	add('add() when state is closed', function(){
+	add('add(stream) write in the stream', function(){
 
 	});
-	*/
 
-	add('add() with lastEventId sent event history', function(){
+	add('add(stream, lastEventId) with lastEventId send event history', function(){
+
+	});
+
+	add('add(stream) will remove(stream) when stream is closed', function(test){
 
 	});
 
@@ -29,7 +32,7 @@ export function suite(add){
 
 	});
 
-	add('close() will close all stream and clear history', function(){
+	add('disable() close all stream, clear history & prevent to add new stream', function(){
 
 	});
 
@@ -41,11 +44,7 @@ export function suite(add){
 
 	});
 
-	add('keepAlive event are sent', function(){
-
-	});
-
-	add('serveRequest read request headers, params and call handleRequest to check if stream must be added', function(){
+	add('keepAlive event are written', function(){
 
 	});
 }
