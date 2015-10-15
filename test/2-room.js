@@ -31,7 +31,9 @@ export function suite(add){
 	});
 
 	add('add(stream) write a join event in the stream', function(test){
-		var room = Room.create();
+		var room = Room.create({
+			autoIncrementId: false
+		});
 		var stream = http.createBody();
 
 		room.retryDuration = 10;
