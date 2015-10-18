@@ -10,21 +10,71 @@ export function suite(add){
 		test.equal(history.size, 1);
 	});
 
-	add('since', function(test){
-		var history = History.create(3);
+	add('indexOf', function(test){
+		var history = History.create();
 
-		var eventA = 'a', eventB = 'b', eventC = 'c';
+		var eventA = {id: 'a'}, eventB = {id: 'b'}, eventC = {id: null};
 
 		history.add(eventA);
 		history.add(eventB);
 		history.add(eventC);
 
-		test.equal(history.since(1).join(''), 'bc');
-		test.equal(history.since(2).join(''), 'c');
+		test.equal(history.indexOf(eventA.id), 0);
+		test.equal(history.indexOf(eventB.id), 1);
+		test.equal(history.indexOf(null), 2);
+		test.equal(history.indexOf('foo'), -1);
+	});
 
-		history.add('d');
+	add('autoId will create an id for event added without id', function(test){
+		var history = History.create(10, true);
+		var eventA = {};
 
-		test.equal(history.since(2).join(''), 'cd');
+		history.add(eventA);
+		test.equal(eventA.id, 1);
+	});
+
+	add('autoId will not set an id when event already got an id', function(test){
+		var history = History.create(10, true);
+		var eventA = {id: 'a'};
+
+		history.add(eventA);
+		test.equal(eventA.id, 'a');
+	});
+
+	add('when maxId is reached the event id can collides', function(test){
+		var history = History.create(10, true);
+		history.maxId = 1;
+		var eventA = {};
+		var eventB = {};
+
+		history.add(eventA);
+		history.add(eventB);
+
+		// because we added 2 event without id and maxId is 1
+		// the result returned by history.indexOf(thirdSourceEvent.id) states
+		// that thirdSourceEvent is at index 0 but it's the expected behaviour
+		// because maxId will be very high this case will never happen
+		// considering the fact history.since will be called by a client trying to reconnect
+		// and client reconnection can occur between a min
+		// sou you need to send 1 000 000 000 event in less than 60 s to reproduce this behaviour
+		test.equal(eventA.id, eventB.id);
+	});
+
+	add('since', function(test){
+		var history = History.create(3, true);
+
+		var eventA = {}, eventB = {}, eventC = {}, eventD = {};
+
+		history.add(eventA);
+		history.add(eventB);
+		history.add(eventC);
+
+		test.match(history.since(eventA.id), [eventB, eventC]);
+		test.match(history.since(eventB.id), [eventC]);
+
+		history.add(eventD);
+
+		test.match(history.since(eventB.id), [eventC, eventD]);
 	});
 
 	add('clear', function(test){
@@ -34,34 +84,5 @@ export function suite(add){
 		history.clear();
 
 		test.equal(history.size, 0);
-	});
-
-	add('autoIncrementId', function(test){
-		var history = History.create(10, true);
-
-		history.maxId = 2;
-		var firstSourceEvent = {name: 'first'};
-		var secondSourceEvent = {name: 'second'};
-		var thirdSourceEvent = {name: 'third'};
-
-		history.add(firstSourceEvent);
-		history.add(secondSourceEvent);
-		history.add(thirdSourceEvent);
-
-		test.equal(firstSourceEvent.id, 1);
-		test.equal(secondSourceEvent.id, 2);
-		test.equal(thirdSourceEvent.id, 1);
-
-		// since second only third happened		
-		test.equal(history.since(secondSourceEvent)[0], thirdSourceEvent);
-		// because we added 3 events and maxId is 2
-		// the result returned by history.since(firstSourceEvent) states
-		// that secondSourceEvent happened after third but it's the expected behaviour
-		// because maxId will be very high this case will never happen
-		// considering the fact history.since will be called by a client trying to reconnect
-		// and client reconnection can occur between a min
-		// sou you need to send 1 000 000 000 event in less than 60 s to reproduce this behaviour
-		test.equal(history.since(thirdSourceEvent)[0], secondSourceEvent);
-
 	});
 }
