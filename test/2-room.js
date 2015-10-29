@@ -21,7 +21,7 @@ export function suite(add){
 		return test.rejectWith(addPromise, {name: 'RangeError'});
 	});
 
-	add('add(stream) returns false when toom isDisabled', function(test){
+	add('add(stream) returns false when room isDisabled', function(test){
 		var room = Room.create();
 		var stream = http.createBody();
 
@@ -74,7 +74,7 @@ export function suite(add){
 
 	});
 
-	add('disable() close all stream, clear history & prevent to add new stream', function(test){
+	add('disable() close all stream & clear history', function(test){
 
 	});
 
