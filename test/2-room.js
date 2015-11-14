@@ -1,52 +1,53 @@
+import rest from '../node_modules/@dmail/rest/index.js';
+
 import Room from '../lib/room.js';
-import http from '../node_modules/@dmail/http/index.js';
 
 export function suite(add){
-	add('add(stream) returns true', function(test){
+	add('add(stream) returns true', function(){
 		var room = Room.create();
-		var stream = http.createBody();
+		var stream = rest.createBody();
 
-		test.equal(room.add(stream), true);
+		this.equal(room.add(stream), true);
 	});
 
-	add('add(stream) when user limit is reached', function(test){
+	add('add(stream) when user limit is reached', function(){
 		var room = Room.create({
 			maxLength: 0
 		});
-		var stream = http.createBody();
+		var stream = rest.createBody();
 		var addPromise = new Promise(function(resolve){
 			resolve(room.add(stream));
 		});
 
-		return test.rejectWith(addPromise, {name: 'RangeError'});
+		return this.rejectWith(addPromise, {name: 'RangeError'});
 	});
 
-	add('add(stream) returns false when room isDisabled', function(test){
+	add('add(stream) returns false when room isDisabled', function(){
 		var room = Room.create();
-		var stream = http.createBody();
+		var stream = rest.createBody();
 
 		room.disable();
 
-		test.equal(room.add(stream), false);
+		this.equal(room.add(stream), false);
 	});
 
-	add('add(stream) write a join event in the stream', function(test){
+	add('add(stream) write a join event in the stream', function(){
 		var room = Room.create({
 			autoIncrementId: false
 		});
-		var stream = http.createBody();
+		var stream = rest.createBody();
 
 		room.retryDuration = 10;
 		room.add(stream);
 		stream.close();
 
-		return test.resolveWith(stream.readAsString(), 'retry:10\nevent:join\ndata:');
+		return this.resolveWith(stream.readAsString(), 'retry:10\nevent:join\ndata:');
 	});
 
-	add('added stream receive event when calling room.sendEvent()', function(test){
+	add('added stream receive event when calling room.sendEvent()', function(){
 		var room = Room.create();
-		var firstStream = http.createBody();
-		var secondStream = http.createBody();
+		var firstStream = rest.createBody();
+		var secondStream = rest.createBody();
 
 		room.add(firstStream);
 		room.add(secondStream);
@@ -57,16 +58,16 @@ export function suite(add){
 		secondStream.close();
 
 		return Promise.all([
-			test.resolveWith(firstStream.readAsString(), 'event:foo\ndata:bar\n\n'),
-			test.resolveWith(secondStream.readAsString(), 'event:foo\ndata:bar\n\n')
+			this.resolveWith(firstStream.readAsString(), 'event:foo\ndata:bar\n\n'),
+			this.resolveWith(secondStream.readAsString(), 'event:foo\ndata:bar\n\n')
 		]);
 	});
 
-	add('add(stream, lastEventId) with lastEventId send event history', function(test){
+	add('add(stream, lastEventId) with lastEventId send event history', function(){
 
 	});
 
-	add('add(stream) will remove(stream) when stream is closed', function(test){
+	add('add(stream) will remove(stream) when stream is closed', function(){
 
 	});
 
@@ -74,19 +75,19 @@ export function suite(add){
 
 	});
 
-	add('disable() close all stream & clear history', function(test){
+	add('disable() close all stream & clear history', function(){
 
 	});
 
-	add('first add() open the room', function(test){
+	add('first add() open the room', function(){
 
 	});
 
-	add('last remove() close the room', function(test){
+	add('last remove() close the room', function(){
 
 	});
 
-	add('keepAlive event are written', function(test){
+	add('keepAlive event are written', function(){
 
 	});
 }

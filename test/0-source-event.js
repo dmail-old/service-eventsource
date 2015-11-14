@@ -21,11 +21,11 @@ export function suite(add){
 	];
 
 	events.forEach(function(event, index){
-		add('sourceEvent toString() #' + index, function(test){
+		add('sourceEvent toString() #' + index, function(){
 			var sourceEvent = SourceEvent.create();
 			Object.assign(sourceEvent, event.properties);
 
-			test.equal(sourceEvent.toString(), event.string);
+			this.equal(sourceEvent.toString(), event.string);
 		});		
 	});
 }

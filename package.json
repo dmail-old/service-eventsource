@@ -1,9 +1,9 @@
 {
-	"name": "@dmail/http-service-eventsource",
+	"name": "@dmail/service-eventsource",
 	"version": "0.0.1",
 	"license": "UNLICENSED",
 	"dependencies": {
-		"@dmail/http": "git+https://github.com/dmail/http"
+		"@dmail/rest": "git+https://github.com/dmail/rest"
 	},
 	"devDependencies": {
 		"system-test": "git+https://github.com/dmail/system-test"
@@ -13,6 +13,6 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/dmail/http-service-eventsource"
+		"url": "https://github.com/dmail/service-eventsource"
 	}
 }
