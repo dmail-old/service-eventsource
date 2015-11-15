@@ -1,6 +1,7 @@
 import History from '../lib/history.js';
 
 export function suite(add){
+	
 	add('add', function(){
 		var history = History.create(1);
 
@@ -85,4 +86,5 @@ export function suite(add){
 
 		this.equal(history.size, 0);
 	});
+	
 }

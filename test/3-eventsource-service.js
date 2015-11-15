@@ -1,7 +1,32 @@
-import EventSourceService from '../lib/service.js';
+import Rest from '../node_modules/@dmail/rest/index.js';
+
+import EventSourceService from '../index.js';
 
 export function suite(add){
-	add('checkRequestValidity()', function(){
+
+	add("request must accept 'text/event-stream' in its headers to be matched", function(){
+		var eventSourceService = EventSourceService.create();
+		var rest = Rest.create();
+		var requestAcceptingEventStream = rest.createRequest({
+			headers: {
+				'accept': 'text/event-stream'
+			}
+		});
+		var requestAcceptingHTML = rest.createRequest({
+			headers: {
+				'accept': 'text/html'
+			}
+		});
+
+		rest.use(eventSourceService);
+
+		return Promise.all([
+			this.resolveWith(rest.findServiceMatch(requestAcceptingEventStream), eventSourceService),
+			this.resolveWith(rest.findServiceMatch(requestAcceptingHTML), null)
+		]);
+	});
+	
+	add('validateRequest() is used to know if request match', function(){
 		// Room.create({validateRequest: function(){}})
 	});
 
@@ -20,4 +45,5 @@ export function suite(add){
 	add('serveRequest(request) returns 200 with right headers when all is fine', function(){
 
 	});
+
 }

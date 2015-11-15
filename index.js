@@ -7,7 +7,7 @@ import rest from './node_modules/@dmail/rest/index.js';
 import EventRoom from './lib/room.js';
 
 var EventSourceService = proto.extend({
-	constructor(options){
+	constructor: function EventSourceService(options){
 		this.room = EventRoom.create(options);
 		Object.assign(this, options);
 	},
@@ -58,7 +58,7 @@ var EventSourceService = proto.extend({
 		return rest.createBody();
 	},
 
-	methods:{
+	methods: {
 		get(request){
 			var responseProperties, stream = this.createResponseBody();
 

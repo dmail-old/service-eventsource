@@ -9,7 +9,8 @@
 		"system-test": "git+https://github.com/dmail/system-test"
 	},
 	"scripts": {
-		"test": "system-test"
+		"test": "system-test",
+		"link-dev": "npm link ../rest"
 	},
 	"repository": {
 		"type": "git",
