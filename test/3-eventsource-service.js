@@ -51,7 +51,6 @@ export function suite(add){
 
 	add('getRequestLastEventId()', function(){
 		// read last-event-id from search params or from headers
-
 		var requestWithLastEventIdInHeaders = Rest.createRequest({
 			headers: {
 				'last-event-id': 10
@@ -65,16 +64,52 @@ export function suite(add){
 		this.equal(EventSourceService.getRequestLastEventId(requestWithLastEventIdInUrlSearchParams), 5);
 	});
 
-	add('serveRequest(request) returns 503 for limit reached', function(){
+	add('200 for request matching', function(){
+		var eventSourceService = EventSourceService.create();
+		var rest = Rest.create();
+		var requestAcceptingEventStream = rest.createRequest({
+			headers: {
+				'accept': 'text/event-stream'
+			}
+		});
+		
 
+		rest.use(eventSourceService);
+
+		return this.resolveWith(rest.fetch(requestAcceptingEventStream), {status: 200});
 	});
 
-	add('serveRequest(request) returns 204 when room is disabled', function(){
+	add('returns 503 for limit reached', function(){
+		var eventSourceService = EventSourceService.create({
+			maxLength: 1
+		});
+		var rest = Rest.create();
+		var requestAcceptingEventStream = rest.createRequest({
+			headers: {
+				'accept': 'text/event-stream'
+			}
+		});
 
+		rest.use(eventSourceService);
+
+		return this.resolveWith(rest.fetch(requestAcceptingEventStream).then(function(){
+			return rest.fetch(requestAcceptingEventStream);
+		}), {status: 503});
 	});
 
-	add('serveRequest(request) returns 200 with right headers when all is fine', function(){
+	add('returns 204 when disabled', function(){
+		var eventSourceService = EventSourceService.create();
+		var rest = Rest.create();
+		var requestAcceptingEventStream = rest.createRequest({
+			headers: {
+				'accept': 'text/event-stream'
+			}
+		});
+		rest.use(eventSourceService);
 
+		eventSourceService.disable();
+
+		return this.resolveWith(rest.fetch(requestAcceptingEventStream), {status: 204});
 	});
 
 }

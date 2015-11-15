@@ -12,6 +12,14 @@ var EventSourceService = proto.extend({
 		Object.assign(this, options);
 	},
 
+	disable(){
+		this.room.disable();
+	},
+
+	enable(){
+		this.room.enable();
+	},
+
 	acceptEventStream(accept){
 		// it's more complicated in case accept headers are multiple
 		return accept === 'text/event-stream';
