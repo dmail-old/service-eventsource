@@ -45,7 +45,7 @@ var EventSourceService = proto.extend({
 			lastEventId = request.headers.get('last-event-id');
 		}
 		else{
-			var searchParams = new URLSearchParams(request.url.search);
+			var searchParams = new URLSearchParams(request.url.search.slice(1));
 			if( searchParams.has('lastEventId') ){
 				lastEventId = searchParams.get('lastEventId');
 			}
